@@ -1,0 +1,41 @@
+services:
+
+  nginx:
+    build: ./requirements/nginx/
+    depends_on:
+      - wordpress
+    networks:
+      - docker_network
+    ports:
+      - "443:443"
+
+  mariadb:
+    build: ./requirements/mariadb
+    networks:
+      - docker_network
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+
+  wordpress:
+    build: ./requirements/wordpress
+    depends_on:
+      - mariadb
+    networks:
+      - docker_network
+    ports:
+      - "9000:9000"
+    volumes:
+      - website:/var/www/html
+
+volumes:
+  database:
+
+  website:
+
+networks:
+  docker_network:
+    driver: bridge
+
+secrets:
