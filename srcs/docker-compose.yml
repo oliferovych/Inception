@@ -1,5 +1,4 @@
 services:
-
   nginx:
     build: ./requirements/nginx/
     depends_on:
@@ -31,7 +30,6 @@ services:
 
 volumes:
   database:
-
   website:
 
 networks:
