@@ -1,17 +1,24 @@
 SECRETS_DIR = secrets
 SRC_DIR = ./srcs
 
-all: up
+all: build up
 
-up:
-	cd srcs/requirements && docker-compose up -d
+build: check-docker
+	@cd srcs/requirements && docker-compose build
 
-down:
-	cd srcs/requirements && docker-compose down
+up: check-docker
+	@cd srcs/requirements && docker-compose up -d
 
-re:
-	cd srcs/requirements && docker-compose down
-	cd srcs/requirements && docker-compose up -d
+down: check-docker
+	@cd srcs/requirements && docker-compose down
+
+re: check-docker down up
+
+check-docker:
+	@docker info > /dev/null 2>&1 || { \
+		echo "Docker is not running. Please start Docker Desktop."; \
+		exit 1; \
+	}
 
 help:
 	@echo "Usage: make [target]"
