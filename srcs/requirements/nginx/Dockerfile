@@ -1,7 +1,9 @@
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y nginx && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    nginx \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY config/config.conf /etc/nginx/nginx.conf
 
@@ -15,3 +17,4 @@ RUN chmod 600 /etc/nginx/ssl/privkey.pem
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
+#this is for nginx to run in the foreground
