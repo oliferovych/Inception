@@ -36,4 +36,4 @@ networks:
   docker_network:
     driver: bridge
 
-secrets:
+# secrets:
