@@ -1,7 +1,7 @@
 SECRETS_DIR = secrets
 SRC_DIR = ./srcs
 
-all: build up
+all: build
 
 build: check-docker
 	@cd srcs/requirements && docker-compose build
@@ -13,6 +13,9 @@ down: check-docker
 	@cd srcs/requirements && docker-compose down
 
 re: check-docker down up
+
+clean: check-docker
+	@cd srcs/requirements && docker-compose down --rmi all
 
 check-docker:
 	@docker info > /dev/null 2>&1 || { \

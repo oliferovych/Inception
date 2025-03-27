@@ -4,7 +4,7 @@ services:
     depends_on:
       - wordpress
     networks:
-      - docker_network
+      - inception
     ports:
       - "443:443"
     volumes:
@@ -15,7 +15,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     networks:
-      - docker_network
+      - inception
     ports:
       - "3306:3306"
     volumes:
@@ -28,7 +28,7 @@ services:
     depends_on:
       - mariadb
     networks:
-      - docker_network
+      - inception
     ports:
       - "9000:9000"
     volumes:
@@ -36,12 +36,13 @@ services:
     env_file:
       - .env
 
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
 volumes:
   database:
   website:
-
-networks:
-  docker_network:
-    driver: bridge
 
 # secrets:
