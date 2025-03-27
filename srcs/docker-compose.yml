@@ -1,6 +1,7 @@
 services:
   nginx:
     build: ./requirements/nginx/
+    container_name: nginx
     depends_on:
       - wordpress
     networks:
@@ -9,22 +10,34 @@ services:
       - "443:443"
     volumes:
       - website:/var/www/html
+    secrets:
+      - nginx_db_name
+      - nginx_db_user
+      - nginx_db_password
+      - nginx_db_host
     env_file:
       - .env
 
   mariadb:
     build: ./requirements/mariadb
+    container_name: mariadb
     networks:
       - inception
     ports:
       - "3306:3306"
     volumes:
       - database:/var/lib/mysql
+    secrets:
+      - mysql_root_password
+      - mysql_password
+      - mysql_user
+      - mysql_database
     env_file:
       - .env
 
   wordpress:
     build: ./requirements/wordpress
+    container_name: wordpress
     depends_on:
       - mariadb
     networks:
@@ -33,6 +46,11 @@ services:
       - "9000:9000"
     volumes:
       - website:/var/www/html
+    secrets:
+      - wp_db_name
+      - wp_db_user
+      - wp_db_password
+      - wp_db_host
     env_file:
       - .env
 
@@ -45,4 +63,28 @@ volumes:
   database:
   website:
 
-# secrets:
+secrets:
+  wp_db_password:
+    file: ../secrets/WORDPRESS_DB_PASSWORD.txt
+  wp_db_user:
+    file: ../secrets/WORDPRESS_DB_USER.txt
+  wp_db_name:
+    file: ../secrets/WORDPRESS_DB_NAME.txt
+  wp_db_host:
+    file: ../secrets/WORDPRESS_DB_HOST.txt
+  nginx_db_user:
+    file: ../secrets/DB_USER.txt
+  nginx_db_password:
+    file: ../secrets/DB_PASSWORD.txt
+  nginx_db_name:
+    file: ../secrets/DB_NAME.txt
+  nginx_db_host:
+    file: ../secrets/DB_HOST.txt
+  mysql_root_password:
+    file: ../secrets/MYSQL_ROOT_PASSWORD.txt
+  mysql_password:
+    file: ../secrets/MYSQL_PASSWORD.txt
+  mysql_user:
+    file: ../secrets/MYSQL_USER.txt
+  mysql_database:
+    file: ../secrets/MYSQL_DATABASE.txt
