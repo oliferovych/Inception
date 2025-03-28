@@ -4,6 +4,7 @@ services:
     container_name: nginx
     depends_on:
       - wordpress
+    restart: always
     networks:
       - inception
     ports:
@@ -11,6 +12,7 @@ services:
     volumes:
       - website:/var/www/html
     secrets:
+      - nginx_domain
       - nginx_db_name
       - nginx_db_user
       - nginx_db_password
@@ -23,8 +25,6 @@ services:
     container_name: mariadb
     networks:
       - inception
-    ports:
-      - "3306:3306"
     volumes:
       - database:/var/lib/mysql
     secrets:
@@ -42,8 +42,6 @@ services:
       - mariadb
     networks:
       - inception
-    ports:
-      - "9000:9000"
     volumes:
       - website:/var/www/html
     secrets:
@@ -80,6 +78,8 @@ secrets:
     file: ../secrets/DB_NAME.txt
   nginx_db_host:
     file: ../secrets/DB_HOST.txt
+  nginx_domain:
+    file: ../secrets/NGINX_DOMAIN.txt
   mysql_root_password:
     file: ../secrets/MYSQL_ROOT_PASSWORD.txt
   mysql_password:
