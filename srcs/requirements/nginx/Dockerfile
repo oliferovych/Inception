@@ -3,18 +3,17 @@ FROM debian:bullseye
 RUN apt-get update && apt-get install -y \
     nginx \
     openssl \
+    gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-COPY config/config.conf /etc/nginx/nginx.conf
+COPY config/config.conf /etc/nginx/sites-available/default
 
-COPY config/index.html /etc/nginx/html/index.html
-
-COPY certs/fullchain.pem /etc/nginx/ssl/fullchain.pem
-COPY certs/privkey.pem /etc/nginx/ssl/privkey.pem
-
-RUN chmod 600 /etc/nginx/ssl/privkey.pem
+COPY config/index.html /var/www/html/index.html
+COPY entry.sh entry.sh
+RUN chmod +x entry.sh
 
 EXPOSE 443
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT [ "/entry.sh" ]
+# CMD ["nginx", "-g", "daemon off;"]
 #this is for nginx to run in the foreground
