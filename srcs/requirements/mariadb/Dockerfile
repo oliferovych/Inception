@@ -1,12 +1,17 @@
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     mariadb-server \
+    gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-# ENV MYSQL_ROOT_PASSWORD=Jesuis42
-# ENV MYSQL_DATABASE=wordpress
-# ENV MYSQL_USER=wp_user
-# ENV MYSQL_PASSWORD=Jesuis42
+COPY config.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+RUN chmod 664 /etc/mysql/mariadb.conf.d/50-server.cnf
 
-EXPOSE 3306
+RUN mkdir /run/mysqld
+
+COPY tools/init_db.sql /etc/mysql/init_db.sql
+COPY tools/entry.sh entry.sh
+RUN chmod +x entry.sh
+
+ENTRYPOINT [ "/entry.sh" ]
