@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir /run/php
 
 COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY entry.sh entry.sh
+RUN chmod +x entry.sh
 
-EXPOSE 9000
-
-CMD [ "php-fpm7.4", "-F" ]
+ENTRYPOINT [ "/entry.sh" ]
