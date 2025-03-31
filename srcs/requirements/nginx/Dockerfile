@@ -6,9 +6,8 @@ RUN apt-get update && apt-get install -y \
     gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-COPY config/config.conf /etc/nginx/sites-available/default
+COPY config/config.conf /etc/nginx/nginx.conf
 
-COPY config/index.html /var/www/html/index.html
 COPY entry.sh entry.sh
 RUN chmod +x entry.sh
 

@@ -34,6 +34,8 @@ echo ${DB_NAME}
 echo ${DB_USER}
 echo ${DB_PASSWORD}
 
+whoami
+
 # echo "Checking database connection..."
 # while ! mysqladmin ping -h"$DB_HOST" --silent; do
 # 	echo "Waiting for database..."
@@ -41,8 +43,8 @@ echo ${DB_PASSWORD}
 # done
 # echo "Database is reachable!"
 
-envsubst '${DOMAIN}' < /etc/nginx/sites-available/default > /etc/nginx/sites-available/default.tmp
-mv /etc/nginx/sites-available/default.tmp /etc/nginx/sites-available/default
+envsubst '${DOMAIN}' < /etc/nginx/nginx.conf > /etc/nginx/sites-available/nginx.conf
+# mv /etc/nginx/sites-available/default.tmp /etc/nginx/sites-available/default
 
 openssl req \
 			-x509 \
@@ -52,6 +54,8 @@ openssl req \
 			-keyout /etc/ssl/private/nginx-selfsigned.key \
 			-out /etc/ssl/certs/nginx-selfsigned.crt \
 			-subj "/C=DE/ST=BW/O=42HN/CN=$DOMAIN"
+
+nginx -t
 
 echo "Starting Nginx..."
 exec nginx -g 'daemon off;'
