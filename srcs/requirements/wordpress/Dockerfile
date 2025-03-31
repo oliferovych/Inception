@@ -6,7 +6,9 @@ RUN apt-get update && apt-get install -y \
     php7.4-mysql \
     && rm -rf /var/lib/apt/lists/*
 
+
 RUN mkdir /run/php
+RUN cp -R /usr/share/wordpress/* /var/www/html/
 
 COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY entry.sh entry.sh
