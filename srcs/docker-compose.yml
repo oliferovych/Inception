@@ -59,7 +59,11 @@ networks:
 
 volumes:
   database:
+    driver: local
+    name: database
   website:
+    driver: local
+    name: website
 
 secrets:
   wp_db_password:
