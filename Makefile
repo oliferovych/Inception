@@ -1,7 +1,7 @@
 SECRETS_DIR = secrets
 SRC_DIR = ./srcs
 
-all: build up
+all: up
 
 build: check-docker
 	@cd $(SRC_DIR)/requirements && docker-compose build
@@ -9,20 +9,21 @@ build: check-docker
 up: check-docker
 	@cd $(SRC_DIR)/requirements && docker-compose up -d
 
-down:
+down: stop
 	@cd $(SRC_DIR)/requirements && docker-compose down
 
-kill:
+stop:
 	docker stop -t 0 nginx
 	docker stop -t 0 mariadb
 	docker stop -t 0 wordpress
+
+re: check-docker down build up
+
+clean: check-docker stop
 	$(MAKE) down
-
-re: check-docker kill build up
-
-clean: check-docker
 	docker builder prune --force
-	@cd $(SRC_DIR)/requirements && docker-compose down --rmi all
+	docker volume prune --force
+	docker network prune --force
 
 check-docker:
 	@docker info > /dev/null 2>&1 || { \
@@ -40,4 +41,4 @@ help:
 	@echo "  re        - Run down and up"
 	@echo "  help      - Show this help"
 
-.PHONY: all up down re help
+.PHONY: all up down stop re help
