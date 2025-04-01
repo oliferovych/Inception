@@ -10,7 +10,7 @@ up: check-docker
 	@cd $(SRC_DIR)/requirements && docker-compose up -d
 
 down: stop
-	@cd $(SRC_DIR)/requirements && docker-compose down
+	@cd $(SRC_DIR)/requirements && docker-compose down -v
 
 stop:
 	docker stop -t 0 nginx
