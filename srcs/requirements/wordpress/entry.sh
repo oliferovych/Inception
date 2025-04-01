@@ -1,6 +1,6 @@
 #!bin/bash
 
-set -e
+# set -e
 
 REQUIRED_SECRETS=(
     "/run/secrets/wp_db_host"
@@ -31,10 +31,32 @@ echo ${DB_USER}
 echo ${DB_PASSWORD}
 echo ${DB_NAME}
 
-if [ ! -f /var/www/html/wp-config.php ]; then
-    echo "WordPress is not installed. Setting up..."
-    cp /usr/share/wordpress/* /var/www/html/
+# chown -R www-data:www-data /usr/share/wordpress
+# chmod -R 755 /usr/share/wordpress
+# chown -R www-data:www-data /var/www/html
+# cp -r /usr/share/wordpress/* /var/www/html/
+
+cd /var/www/html
+
+wp core download \
+    --allow-root \
+    --quiet
+
+if [ -f /var/www/html/wp-config.php ]; then
+    echo "removing standard wp-config.php"
+    rm /var/www/html/wp-config.php
+else
+    echo "Creating wp-config.php..."
 fi
+
+wp config create \
+	--dbname=$DB_NAME \
+	--dbuser=$DB_USER \
+    --dbpass=$DB_PASSWORD \
+	--dbhost=$DB_HOST \
+	--allow-root \
+	--quiet \
+	# --prompt=dbpass < /run/secrets/wp_db_password
 
 if [ -f /var/www/html/index.html ]; then
     echo "Removing default index.html..."
@@ -48,21 +70,21 @@ fi
 # done
 # echo "Database is reachable!"
 
-cat > /var/www/html/wp-config.php <<EOL
-<?php
-define('DB_NAME', getenv('DB_NAME') ?: '$DB_NAME');
-define('DB_USER', getenv('DB_USER') ?: '$DB_USER');
-define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '$DB_PASSWORD');
-define('DB_HOST', getenv('DB_HOST') ?: '$DB_HOST');
+# cat > /var/www/html/wp-config.php <<EOL
+# <?php
+# define('DB_NAME', getenv('DB_NAME') ?: '$DB_NAME');
+# define('DB_USER', getenv('DB_USER') ?: '$DB_USER');
+# define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '$DB_PASSWORD');
+# define('DB_HOST', getenv('DB_HOST') ?: '$DB_HOST');
 
-define('WP_DEBUG', getenv('WP_DEBUG') ?: false);
+# define('WP_DEBUG', getenv('WP_DEBUG') ?: false);
 
-if (!defined('ABSPATH'))
-    define('ABSPATH', __DIR__ . '/');
+# if (!defined('ABSPATH'))
+#     define('ABSPATH', __DIR__ . '/');
 
-require_once ABSPATH . 'wp-settings.php';
-?>
-EOL
+# require_once ABSPATH . 'wp-settings.php';
+# ?>
+# EOL
 
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
