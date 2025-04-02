@@ -43,8 +43,9 @@ whoami
 # done
 # echo "Database is reachable!"
 
-envsubst '${DOMAIN}' < /etc/nginx/nginx.conf > /etc/nginx/sites-available/nginx.conf
-# mv /etc/nginx/sites-available/default.tmp /etc/nginx/sites-available/default
+envsubst '${DOMAIN}' < /etc/nginx/nginx.conf > /etc/nginx.tmp
+mv /etc/nginx.tmp /etc/nginx/nginx.conf
+cp /etc/nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
 
 openssl req \
 			-x509 \
@@ -53,7 +54,7 @@ openssl req \
 			-newkey rsa:2048 \
 			-keyout /etc/ssl/private/nginx-selfsigned.key \
 			-out /etc/ssl/certs/nginx-selfsigned.crt \
-			-subj "/C=DE/ST=BW/O=42HN/CN=$DOMAIN"
+			-subj "/C=DE/ST=BW/O=42HN/CN=${DOMAIN}"
 
 nginx -t
 
