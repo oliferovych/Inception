@@ -12,11 +12,7 @@ services:
     volumes:
       - website:/var/www/html
     secrets:
-      - nginx_domain
-      - nginx_db_name
-      - nginx_db_user
       - nginx_db_password
-      - nginx_db_host
     env_file:
       - .env
 
@@ -30,8 +26,6 @@ services:
     secrets:
       - mysql_root_password
       - mysql_password
-      - mysql_user
-      - mysql_database
     env_file:
       - .env
 
@@ -45,10 +39,9 @@ services:
     volumes:
       - website:/var/www/html
     secrets:
-      - wp_db_name
-      - wp_db_user
       - wp_db_password
-      - wp_db_host
+      - wp_user_password
+      - wp_admin_password
     env_file:
       - .env
 
@@ -68,27 +61,15 @@ volumes:
 secrets:
   wp_db_password:
     file: ../secrets/WORDPRESS_DB_PASSWORD.txt
-  wp_db_user:
-    file: ../secrets/WORDPRESS_DB_USER.txt
-  wp_db_name:
-    file: ../secrets/WORDPRESS_DB_NAME.txt
-  wp_db_host:
-    file: ../secrets/WORDPRESS_DB_HOST.txt
-  nginx_db_user:
-    file: ../secrets/DB_USER.txt
+  wp_user_password:
+    file: ../secrets/WORDPRESS_USER_PASSWORD.txt
+  wp_admin_password:
+    file: ../secrets/WORDPRESS_ADMIN_PASSWORD.txt
   nginx_db_password:
     file: ../secrets/DB_PASSWORD.txt
-  nginx_db_name:
-    file: ../secrets/DB_NAME.txt
-  nginx_db_host:
-    file: ../secrets/DB_HOST.txt
-  nginx_domain:
-    file: ../secrets/NGINX_DOMAIN.txt
   mysql_root_password:
     file: ../secrets/MYSQL_ROOT_PASSWORD.txt
   mysql_password:
     file: ../secrets/MYSQL_PASSWORD.txt
-  mysql_user:
-    file: ../secrets/MYSQL_USER.txt
   mysql_database:
     file: ../secrets/MYSQL_DATABASE.txt
