@@ -4,9 +4,7 @@ set -e
 
 REQUIRED_SECRETS=(
     "/run/secrets/mysql_root_password"
-    "/run/secrets/mysql_user"
     "/run/secrets/mysql_password"
-    "/run/secrets/mysql_database"
 )
 
 for secret in ${REQUIRED_SECRETS[@]}; do
@@ -19,8 +17,6 @@ for secret in ${REQUIRED_SECRETS[@]}; do
     fi
 done
 
-export MYSQL_DATABASE=$(cat /run/secrets/mysql_database)
-export MYSQL_USER=$(cat /run/secrets/mysql_user)
 export MYSQL_PASSWORD=$(cat /run/secrets/mysql_password)
 export MYSQL_ROOT_PASSWORD=$(cat /run/secrets/mysql_root_password)
 

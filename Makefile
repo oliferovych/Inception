@@ -1,4 +1,4 @@
-SECRETS_DIR = secrets
+SECRETS_DIR = ./secrets
 SRC_DIR = ./srcs
 
 all: up
@@ -41,4 +41,4 @@ help:
 	@echo "  re        - Run down and up"
 	@echo "  help      - Show this help"
 
-.PHONY: all up down stop re help
+.PHONY: all up down stop re clean help
