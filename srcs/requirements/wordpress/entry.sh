@@ -33,6 +33,8 @@ echo ${WORDPRESS_ADMIN_USER}
 echo ${WORDPRESS_ADMIN_PASSWORD}
 echo ${WORDPRESS_USER}
 echo ${WORDPRESS_USER_PASSWORD}
+echo ${WORDPRESS_REDIS_HOST}
+echo ${WORDPRESS_REDIS_PORT}
 
 cd /var/www/html
 
@@ -65,17 +67,28 @@ else
         --quiet
 
     echo "Wordpress core installed, admin created!"
+
+    wp user create \
+        $WORDPRESS_USER \
+        $WORDPRESS_USER_EMAIL \
+        --role=author \
+        --user_pass=$WORDPRESS_USER_PASSWORD \
+        --allow-root \
+        --quiet
+
+    echo "User $WORDPRESS_USER created!"
+
+    wp plugin install redis-cache --activate --allow-root --quiet
+    wp config set WP_REDIS_HOST "$WORDPRESS_REDIS_HOST" --allow-root --quiet
+    wp config set WP_REDIS_PORT "$WORDPRESS_REDIS_PORT" --raw --allow-root --quiet
+    wp config set WP_CACHE true --raw --allow-root --quiet
+    wp redis enable --allow-root
+
+    echo "Redis cache configured!"
+
+    echo "Wordpress configured!"
 fi
 
-wp user create \
-    $WORDPRESS_USER \
-    $WORDPRESS_USER_EMAIL \
-    --role=author \
-    --user_pass=$WORDPRESS_USER_PASSWORD \
-    --allow-root \
-    --quiet
-
-echo "User $WORDPRESS_USER created!"
 
 if [ -f /var/www/html/index.html ]; then
     echo "Removing default index.html..."

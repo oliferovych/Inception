@@ -2,7 +2,7 @@ services:
   nginx:
     build: ./requirements/nginx/
     container_name: nginx
-    restart: always
+    restart: unless-stopped
     depends_on:
       - wordpress
     networks:
@@ -19,7 +19,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
-    restart: always
+    restart: unless-stopped
     networks:
       - inception
     volumes:
@@ -33,7 +33,7 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
-    restart: always
+    restart: unless-stopped
     depends_on:
       - mariadb
     networks:
@@ -47,6 +47,17 @@ services:
     env_file:
       - .env
 
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    restart: unless-stopped
+    networks:
+      - inception
+    volumes:
+      - redis_cache:/data
+    depends_on:
+      - mariadb
+
 networks:
   inception:
     name: inception
@@ -59,6 +70,9 @@ volumes:
   website:
     driver: local
     name: website
+  redis_cache:
+    driver: local
+    name: redis_cache
 
 secrets:
   wp_db_password:
