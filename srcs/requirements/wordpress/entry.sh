@@ -34,42 +34,48 @@ echo ${WORDPRESS_ADMIN_PASSWORD}
 echo ${WORDPRESS_USER}
 echo ${WORDPRESS_USER_PASSWORD}
 
-# chown -R www-data:www-data /usr/share/wordpress
-# chmod -R 755 /usr/share/wordpress
-# chown -R www-data:www-data /var/www/html
-# cp -r /usr/share/wordpress/* /var/www/html/
-
 cd /var/www/html
 
-wp core download \
-    --allow-root \
-    --quiet
 
 if [ -f /var/www/html/wp-config.php ]; then
-    echo "removing standard wp-config.php"
-    rm /var/www/html/wp-config.php
+    echo "Wordpress already downloaded!"
 else
-    echo "Creating wp-config.php..."
+    wp core download \
+        --allow-root \
+        --quiet
+    echo "Configuring Wordpress..."
+    wp config create \
+        --dbname=$WORDPRESS_DB_NAME \
+        --dbuser=$WORDPRESS_DB_USER \
+        --dbpass=$WORDPRESS_DB_PASSWORD \
+        --dbhost=$WORDPRESS_DB_HOST \
+        --allow-root \
+        --quiet
+
+    echo "Config completed!"
+
+    wp core install \
+        --url=$DOMAIN \
+        --title="Inception" \
+        --admin_user=$WORDPRESS_ADMIN_USER \
+        --admin_password=$WORDPRESS_ADMIN_PASSWORD \
+        --admin_email=$WORDPRESS_ADMIN_EMAIL \
+        --skip-email \
+        --allow-root \
+        --quiet
+
+    echo "Wordpress core installed, admin created!"
 fi
 
-wp config create \
-	--dbname=$WORDPRESS_DB_NAME \
-	--dbuser=$WORDPRESS_DB_USER \
-    --dbpass=$WORDPRESS_DB_PASSWORD \
-	--dbhost=$WORDPRESS_DB_HOST \
-	--allow-root \
-	--quiet \
-	# --prompt=dbpass < /run/secrets/wp_db_password
-
-wp core install \
-    --url=$DOMAIN \
-    --title="Inception" \
-    --admin_user=$WORDPRESS_ADMIN_USER \
-    --admin_password=$WORDPRESS_ADMIN_PASSWORD \
-    --admin_email=$WORDPRESS_ADMIN_EMAIL \
-    --skip-email \
+wp user create \
+    $WORDPRESS_USER \
+    $WORDPRESS_USER_EMAIL \
+    --role=author \
+    --user_pass=$WORDPRESS_USER_PASSWORD \
     --allow-root \
     --quiet
+
+echo "User $WORDPRESS_USER created!"
 
 if [ -f /var/www/html/index.html ]; then
     echo "Removing default index.html..."
@@ -82,22 +88,6 @@ fi
 #     sleep 2
 # done
 # echo "Database is reachable!"
-
-# cat > /var/www/html/wp-config.php <<EOL
-# <?php
-# define('DB_NAME', getenv('DB_NAME') ?: '$DB_NAME');
-# define('DB_USER', getenv('DB_USER') ?: '$DB_USER');
-# define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '$DB_PASSWORD');
-# define('WORDPRESS_DB_HOST', getenv('WORDPRESS_DB_HOST') ?: '$WORDPRESS_DB_HOST');
-
-# define('WP_DEBUG', getenv('WP_DEBUG') ?: false);
-
-# if (!defined('ABSPATH'))
-#     define('ABSPATH', __DIR__ . '/');
-
-# require_once ABSPATH . 'wp-settings.php';
-# ?>
-# EOL
 
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
