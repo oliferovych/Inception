@@ -38,7 +38,7 @@ envsubst '${DOMAIN}' < /etc/nginx/nginx.conf > /etc/nginx.tmp
 mv /etc/nginx.tmp /etc/nginx/nginx.conf
 cp /etc/nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
 
-cat /etc/nginx/nginx.conf
+# cat /etc/nginx/nginx.conf
 
 openssl req \
 			-x509 \

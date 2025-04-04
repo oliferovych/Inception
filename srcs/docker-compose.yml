@@ -2,9 +2,9 @@ services:
   nginx:
     build: ./requirements/nginx/
     container_name: nginx
+    restart: always
     depends_on:
       - wordpress
-    restart: always
     networks:
       - inception
     ports:
@@ -19,6 +19,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
+    restart: always
     networks:
       - inception
     volumes:
@@ -32,6 +33,7 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
+    restart: always
     depends_on:
       - mariadb
     networks:
