@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     depends_on:
       - wordpress
+      - mariadb
     networks:
       - inception
     ports:
@@ -27,6 +28,7 @@ services:
     secrets:
       - mysql_root_password
       - mysql_password
+      - mysql_backup
     env_file:
       - .env
 
@@ -51,12 +53,13 @@ services:
     build: ./requirements/bonus/redis
     container_name: redis
     restart: unless-stopped
+    depends_on:
+      - mariadb
+      - wordpress
     networks:
       - inception
     volumes:
       - redis_cache:/data
-    depends_on:
-      - mariadb
 
 networks:
   inception:
@@ -89,3 +92,5 @@ secrets:
     file: ../secrets/MYSQL_PASSWORD.txt
   mysql_database:
     file: ../secrets/MYSQL_DATABASE.txt
+  mysql_backup:
+    file: requirements/mariadb/tools/wordpress_backup.sql

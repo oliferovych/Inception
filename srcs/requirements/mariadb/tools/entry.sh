@@ -28,4 +28,5 @@ echo ${MYSQL_ROOT_PASSWORD}
 envsubst < /etc/mysql/init_db.sql > /etc/mysql/tmp.sql
 mv /etc/mysql/tmp.sql /etc/mysql/init_db.sql
 
+echo "Starting MySQL server..."
 mysqld
