@@ -78,6 +78,19 @@ services:
     env_file:
       - .env
 
+  adminer:
+    build: ./requirements/bonus/adminer
+    container_name: adminer
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+
 networks:
   inception:
     name: inception
