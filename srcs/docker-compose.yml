@@ -28,7 +28,6 @@ services:
     secrets:
       - mysql_root_password
       - mysql_password
-      - mysql_backup
     env_file:
       - .env
 
@@ -61,6 +60,24 @@ services:
     volumes:
       - redis_cache:/data
 
+  ftp_serv:
+    build: ./requirements/bonus/ftp
+    container_name: ftp_serv
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    networks:
+      - inception
+    ports:
+      - "21:21"
+      - "30000-30010:30000-30010"
+    volumes:
+      - website:/var/www/html
+    secrets:
+      - ftp_password
+    env_file:
+      - .env
+
 networks:
   inception:
     name: inception
@@ -92,5 +109,5 @@ secrets:
     file: ../secrets/MYSQL_PASSWORD.txt
   mysql_database:
     file: ../secrets/MYSQL_DATABASE.txt
-  mysql_backup:
-    file: requirements/mariadb/tools/wordpress_backup.sql
+  ftp_password:
+    file: ../secrets/FTP_PASSWORD.txt
