@@ -39,6 +39,7 @@ stop:
 	@docker stop -t 0 nginx && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 	@docker stop -t 0 mariadb && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 	@docker stop -t 0 wordpress && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
+	@docker stop -t 0 adminer && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 	@docker stop -t 0 redis && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 	@docker stop -t 0 ftp_serv && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 
