@@ -27,7 +27,10 @@ echo "$FTP_USER:$FTP_PASSWORD" | chpasswd
 chown -R $FTP_USER:$FTP_USER /home/$FTP_USER
 chown -R $FTP_USER:$FTP_USER /var/www/html
 
+mkdir -p /var/run/vsftpd/empty
+chmod 755 /var/run/vsftpd/empty
+
 echo "pasv_address=${DOMAIN}" >> /etc/vsftpd/vsftpd.conf
 
 echo "Starting vsftpd server..."
-/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
+vsftpd /etc/vsftpd/vsftpd.conf

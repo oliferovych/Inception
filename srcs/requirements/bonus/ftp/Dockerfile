@@ -8,7 +8,4 @@ COPY config/vsftpd.conf /etc/vsftpd/vsftpd.conf
 COPY entry.sh entry.sh
 RUN chmod +x entry.sh
 
-RUN mkdir -p /var/run/vsftpd/empty
-RUN chmod 777 /var/run/vsftpd/empty
-
 ENTRYPOINT [ "/entry.sh" ]
