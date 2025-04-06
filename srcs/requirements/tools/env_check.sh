@@ -22,6 +22,7 @@ REQUIRED_VARS=(
 	DB_NAME \
 	DB_USER \
 	DOMAIN \
+	FTP_USER \
 )
 
 if [ -f "$ENV_FILE" ]; then
