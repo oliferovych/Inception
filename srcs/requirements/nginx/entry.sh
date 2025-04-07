@@ -51,6 +51,9 @@ openssl req \
 
 nginx -t
 
+chmod -R 755 /usr/share/nginx/html
+chown -R $(whoami):$(whoami) /usr/share/nginx/html
+
 echo "Starting Nginx..."
 exec nginx -g 'daemon off;'
 
