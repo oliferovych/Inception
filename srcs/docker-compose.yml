@@ -12,6 +12,7 @@ services:
       - "443:443"
     volumes:
       - website:/var/www/html
+      - nginx_logs:/var/log/nginx
     secrets:
       - nginx_db_password
     env_file:
@@ -73,6 +74,7 @@ services:
       - "30000-30010:30000-30010"
     volumes:
       - website:/var/www/html
+      - ftp_logs:/var/log/vsftpd
     secrets:
       - ftp_password
     env_file:
@@ -101,6 +103,26 @@ services:
       - inception
     env_file:
       - .env
+    
+  log_viewer:
+    build: ./requirements/bonus/log_viewer
+    container_name: log_viewer
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+      - mariadb
+      - nginx
+      - redis
+      - ftp_serv
+    networks:
+      - inception
+    volumes:
+      - website:/var/www/html:ro
+      - database:/var/lib/mysql:ro
+      - nginx_logs:/var/log/nginx:ro
+      - ftp_logs:/var/log/vsftpd:ro
+      - redis_cache:/data:ro
+    tty: true
 
 networks:
   inception:
@@ -114,6 +136,12 @@ volumes:
   website:
     driver: local
     name: website
+  nginx_logs:
+    driver: local
+    name: nginx_logs
+  ftp_logs:
+    driver: local
+    name: ftp_logs
   redis_cache:
     driver: local
     name: redis_cache
