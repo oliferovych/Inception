@@ -42,6 +42,7 @@ stop:
 	@docker stop -t 0 adminer && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 	@docker stop -t 0 redis && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 	@docker stop -t 0 ftp_serv && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
+	@docker stop -t 0 static_website && echo " - $(BG)$(GREEN)stopped$(DEF)" || true
 
 clean: stop
 	@$(DOCKER_COMPOSE) down -v --remove-orphans

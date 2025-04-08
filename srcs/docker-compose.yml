@@ -91,6 +91,17 @@ services:
     env_file:
       - .env
 
+  static-website:
+    build: ./requirements/bonus/static_website
+    container_name: static_website
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    networks:
+      - inception
+    env_file:
+      - .env
+
 networks:
   inception:
     name: inception
