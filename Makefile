@@ -21,7 +21,7 @@ WHITE		=	\033[0;97m
 
 all: build up
 
-build: check-docker
+build:
 	@if [ -z "$$(docker ps -q)" ]; then \
         echo "$(BOLD)$(YELLOW)Building containers...$(DEF)"; \
         $(DOCKER_COMPOSE) build; \
@@ -29,7 +29,7 @@ build: check-docker
         echo "$(BOLD)$(GREEN)Containers are already built. Skipping build step.$(DEF)"; \
     fi
 
-up: check-docker
+up:
 	@$(DOCKER_COMPOSE) up -d
 
 down: stop
@@ -62,9 +62,9 @@ check-docker:
 	}
 	@echo ""
 
-re: down build check-docker up
+re: down build up
 
-reconstruct: clean build check-docker up
+reconstruct: clean build up
 
 help:
 	@echo "Usage: make [target]"
